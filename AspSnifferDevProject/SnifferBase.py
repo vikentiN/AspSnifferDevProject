@@ -18,7 +18,8 @@ class SnifferBase(object):
     
     #define constants
 	#PARAM_RE_PATTERN = ''
-
+	logFile				   = (os.getcwd() + '\\log.log')
+	logAsString       = ''
     #end constants
 
     # ====================================================================================================
@@ -26,7 +27,7 @@ class SnifferBase(object):
     # ====================================================================================================
 	def __init__(self):
 		self.buffRawHex  = None	
-		self.logAsString = ''
+		
 
     # ====================================================================================================
     # Function Print

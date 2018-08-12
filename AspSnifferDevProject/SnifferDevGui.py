@@ -9,13 +9,54 @@ import sys
 from SnifferBase import SnifferBase
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QApplication, QWidget, QInputDialog, QLineEdit, QFileDialog, QTextEdit
 
 class Ui_MainWindow(QtWidgets.QMainWindow,SnifferBase):
 
+
+    # ====================================================================================================
+    # Class Constructor
+    # ====================================================================================================
 	def __init__(self,parent = None):
 		super(Ui_MainWindow, self).__init__()
 		self.setupUi(self)
-		
+		self
+
+    # ====================================================================================================
+    # Function Button Select Log File
+    # ==================================================================================================
+	def onSelectLogFileBtnClick(self):
+		try:
+			logFile = QFileDialog.getOpenFileName()#("Output log file", "*.log"), ("all files", "*.*")
+			SnifferBase.logFile = logFile
+			if(None != SnifferBase.logFile and '' != SnifferBase.logFile):
+				self.printActivity('> Output log: ' + str(logFile))
+				self.textEdit_activityLog.moveCursor(QtGui.QTextCursor.End)
+				self.textEdit_activityLog.insertPlainText('\n\n> Output log: ' + ''.join(logFile))
+				QApplication.processEvents()
+			else:
+				self.printActivity('Output log file: Not specified!')
+		except BaseException as e:
+			self.printActivity('Ui_MainWindow:onSelectLogFileBtnClick() - No file selected' + str(e))
+
+    # ====================================================================================================
+    # Function Button Select Tod File
+    # ====================================================================================================
+	def onSelectTodFileBtnClick(self):
+		try:
+			todXmlFile = QFileDialog.getOpenFileName() #("ToD xml files", "*.xml"), ("all files", "*.*")))
+			if(None != todXmlFile and '' != todXmlFile):
+				self.printActivity('> ToD xml: ' + str(todXmlFile))
+				self.textEdit_activityLog.moveCursor(QtGui.QTextCursor.End)
+				self.textEdit_activityLog.insertPlainText('\n\n> ToD xml: ' + ''.join(todXmlFile))
+				QApplication.processEvents()
+			else:
+				self.printActivity('ToD xml: Not specified!')
+		except BaseException as e:
+			self.printActivity('Ui_MainWindow:activityLogOuput() - ' + str(e))
+    # ====================================================================================================
+    # Function Configure UI
+    # ====================================================================================================
 	def setupUi(self, MainWindow):
 		MainWindow.setObjectName("MainWindow")
 		MainWindow.resize(1572, 872)
@@ -96,12 +137,14 @@ class Ui_MainWindow(QtWidgets.QMainWindow,SnifferBase):
 		self.groupBox_controlButtons.setObjectName("groupBox_controlButtons")
 		self.pushBtn_selectLogFile = QtWidgets.QPushButton(self.groupBox_controlButtons)
 		self.pushBtn_selectLogFile.setGeometry(QtCore.QRect(10, 20, 121, 30))
+		self.pushBtn_selectLogFile.clicked.connect(self.onSelectLogFileBtnClick)
 		font = QtGui.QFont()
 		font.setFamily("Verdana")
 		self.pushBtn_selectLogFile.setFont(font)
 		self.pushBtn_selectLogFile.setObjectName("pushBtn_selectLogFile")
 		self.pushBtn_selectTodFile = QtWidgets.QPushButton(self.groupBox_controlButtons)
 		self.pushBtn_selectTodFile.setGeometry(QtCore.QRect(10, 50, 121, 30))
+		self.pushBtn_selectTodFile.clicked.connect(self.onSelectTodFileBtnClick)
 		font = QtGui.QFont()
 		font.setFamily("Verdana")
 		self.pushBtn_selectTodFile.setFont(font)
@@ -643,6 +686,9 @@ class Ui_MainWindow(QtWidgets.QMainWindow,SnifferBase):
 		self.groupBox_activityLog.setGeometry(QtCore.QRect(9, 160, 1251, 621))
 		self.groupBox_activityLog.setAlignment(QtCore.Qt.AlignCenter)
 		self.groupBox_activityLog.setObjectName("groupBox_activityLog")
+		self.textEdit_activityLog = QtWidgets.QTextEdit(self.groupBox_activityLog)
+		self.textEdit_activityLog.setGeometry(QtCore.QRect(12, 30, 1203, 580))
+		self.textEdit_activityLog.setObjectName("textEdit_activityLog")
 		self.horizontalLayout.addWidget(self.groupBox)
 		MainWindow.setCentralWidget(self.centralwidget)
 		self.menubar = QtWidgets.QMenuBar(MainWindow)
